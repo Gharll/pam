@@ -47,24 +47,30 @@ public class SimpleCalculator {
     }
 
     public void calculate(){
-        switch(storedOperation){
-            case "+":
-                result = storedNumbers.get(0) + storedNumbers.get(1);
-                break;
-            case "-":
-                result = storedNumbers.get(0) - storedNumbers.get(1);
-                break;
-            case "*":
-                result = storedNumbers.get(0) * storedNumbers.get(1);
-                break;
-            case "/":
-                result = storedNumbers.get(0) / storedNumbers.get(1);
-                break;
-
+        if (isReadyToCalculate()){
+            switch(storedOperation){
+                case "+":
+                    result = storedNumbers.get(0) + storedNumbers.get(1);
+                    break;
+                case "-":
+                    result = storedNumbers.get(0) - storedNumbers.get(1);
+                    break;
+                case "*":
+                    result = storedNumbers.get(0) * storedNumbers.get(1);
+                    break;
+                case "/":
+                    result = storedNumbers.get(0) / storedNumbers.get(1);
+                    break;
+            }
         }
+
     }
 
     public Double getResult(){
         return result;
+    }
+
+    public boolean isReadyToCalculate(){
+        return storedNumbers.size() == 2 && storedOperation != null && storedOperation.length() > 0;
     }
 }

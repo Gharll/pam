@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class SimpleCalculatorActivity extends AppCompatActivity {
 
-    //Should initialize in onCreate function?
     private SimpleCalculator simpleCalculator;
     private Symbols symbols;
     private Displayer displayer;
@@ -78,12 +77,6 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!displayer.isEmpty()){
-                    if(displayer.getLastCharacterCopy().equals('.')){
-                        displayer.setDotAllowedFlag(true);
-                    }
-                    if(symbols.isSymbol(displayer.getLastCharacterCopy())){
-                        displayer.setDotAllowedFlag(false);
-                    }
                     displayer.deleteLastCharacter();
                 }
             }
@@ -97,6 +90,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             public void onClick(View view) {
                 displayer.clear();
                 calculator.clear();
+                displayer.setInitialData();
             }
         });
     }
@@ -113,19 +107,15 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(!displayer.isEmpty() && !displayer.isLastCharacterSymbol()){
-                        //appendToDisplayer(String.valueOf(operationSymbol));
-                        displayer.setDotAllowedFlag(true);
-                        displayer.setEqualAllowedFlag(true);
                         calculator.storeNextNumber(displayer.getDataCopy());
                         calculator.storeOperation(String.valueOf(operationSymbol));
                         displayer.clear();
+                        displayer.setInitialData();
                     }
                 }
             });
         }
     }
-
-
 
     private void createDotEvent(){
         Button button = (Button) findViewById(R.id.btn_operation_dot);
@@ -149,11 +139,16 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(displayer.isEqualAllowedFlag()){
-                    calculator.storeNextNumber(displayer.getDataCopy());
+                calculator.storeNextNumber(displayer.getDataCopy());
+                if(displayer.isEqualAllowedFlag() && calculator.isReadyToCalculate()){
                     displayer.setEqualAllowedFlag(false);
                     calculator.calculate();
-                    displayer.set(calculator.getResult().toString());
+                    String result = calculator.getResult().toString();
+                    displayer.set(result);
+                    calculator.clear();
+                   if(displayer.getDataCopy().contains(".")){
+                        displayer.setDotAllowedFlag(false);
+                    }
                 }
             }
         });
