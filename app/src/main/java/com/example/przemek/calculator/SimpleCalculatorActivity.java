@@ -11,24 +11,30 @@ import java.util.Map;
 
 public class SimpleCalculatorActivity extends AppCompatActivity {
 
-    private String displayerData = "";
-    private String storedValue[] = new String[2];
-    private Character storedOperation;
-
-    private SimpleCalculator simpleCalculator = new SimpleCalculator();
-    private boolean isDotAllowedFlag = true;
-    private boolean isEqualAllowedFlag = false;
+    //Should initialize in onCreate function?
+    private SimpleCalculator simpleCalculator;
+    private Symbols symbols;
+    private Displayer displayer;
+    private SimpleCalculator calculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_calculator);
+        initializeObject();
         initializeEvent();
 
         if(savedInstanceState != null){
-            displayerData = savedInstanceState.getString("displayerData");
-            updateDisplayer(displayerData);
+            displayer.set(savedInstanceState.getString("displayerData"));
         }
+    }
+
+    protected void initializeObject(){
+        simpleCalculator =  new SimpleCalculator();
+        TextView textView = (TextView) findViewById(R.id.tv_displayer);
+        displayer = new Displayer(textView);
+        calculator = new SimpleCalculator();
+        symbols = new Symbols();
     }
 
     protected void initializeEvent(){
@@ -44,7 +50,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString("displayerData", displayerData);
+        savedInstanceState.putString("displayerData", displayer.getDataCopy());
     }
 
     private void createButtonsNumberEvent(){
@@ -55,7 +61,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    appendToDisplayer(String.valueOf(number));
+                    displayer.append(String.valueOf(number));
                 }
             });
         }
@@ -66,43 +72,22 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         return findViewById(buttonId);
     }
 
-    //append new data at the end of the displayer
-    private void appendToDisplayer(String data){
-        updateDisplayer(displayerData += data);
-    }
-
-    //clear data of displayer and assign new data
-    private void updateDisplayer(String data){
-        TextView displayer = (TextView) findViewById(R.id.tv_displayer);
-        displayerData = data;
-        displayer.setText(displayerData);
-    }
-
     private void createBackspaceEvent(){
         Button button = (Button) findViewById(R.id.btn_bksp);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isDisplayerEmpty()){
-                    if(getLastCharacterOfDisplayer().equals('.')){
-                        isDotAllowedFlag = true;
+                if(!displayer.isEmpty()){
+                    if(displayer.getLastCharacterCopy().equals('.')){
+                        displayer.setDotAllowedFlag(true);
                     }
-                    if(simpleCalculator.isSymbol(getLastCharacterOfDisplayer())){
-                        isDotAllowedFlag = false;
+                    if(symbols.isSymbol(displayer.getLastCharacterCopy())){
+                        displayer.setDotAllowedFlag(false);
                     }
-                    displayerData = displayerData.substring(0, displayerData.length() -1);
-                    updateDisplayer(displayerData);
+                    displayer.deleteLastCharacter();
                 }
             }
         });
-    }
-
-    private Character getLastCharacterOfDisplayer(){
-        return displayerData.charAt(displayerData.length() - 1);
-    }
-
-    private boolean isDisplayerEmpty(){
-        return displayerData == null || displayerData.length() == 0;
     }
 
     private void createClearDisplayerEvent(){
@@ -110,19 +95,15 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearDisplayer();
+                displayer.clear();
+                calculator.clear();
             }
         });
     }
 
-    private void clearDisplayer(){
-        updateDisplayer("");
-        isDotAllowedFlag = true;
-    }
-
     private void createBasicMathematicalOperationEvent(){
         Iterator it =
-                simpleCalculator.getSymbolsMap().entrySet().iterator();
+                symbols.getSymbolMap().entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
             final Character operationSymbol = (Character) pair.getKey();
@@ -131,31 +112,29 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!isDisplayerEmpty() && !isSymbolLastCharacterOfDisplayer()){
+                    if(!displayer.isEmpty() && !displayer.isLastCharacterSymbol()){
                         //appendToDisplayer(String.valueOf(operationSymbol));
-                        isDotAllowedFlag = true;
-                        isEqualAllowedFlag = true;
-                        storedValue[0] = displayerData;
-                        storedOperation = operationSymbol;
-                        clearDisplayer();
+                        displayer.setDotAllowedFlag(true);
+                        displayer.setEqualAllowedFlag(true);
+                        calculator.storeNextNumber(displayer.getDataCopy());
+                        calculator.storeOperation(String.valueOf(operationSymbol));
+                        displayer.clear();
                     }
                 }
             });
         }
     }
 
-    private boolean isSymbolLastCharacterOfDisplayer(){
-        return simpleCalculator.isSymbol(displayerData.charAt(displayerData.length()-1));
-    }
+
 
     private void createDotEvent(){
         Button button = (Button) findViewById(R.id.btn_operation_dot);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(!isDisplayerEmpty() && !isSymbolLastCharacterOfDisplayer() && isDotAllowedFlag){
-                   isDotAllowedFlag = false;
-                    appendToDisplayer(".");
+               if(!displayer.isEmpty() && !displayer.isLastCharacterSymbol() && displayer.isDotAllowedFlag()){
+                   displayer.setDotAllowedFlag(false);
+                    displayer.append(".");
                }
             }
         });
@@ -170,15 +149,11 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isEqualAllowedFlag){
-                    storedValue[1] = displayerData;
-                    isEqualAllowedFlag = false;
-                    switch(storedOperation){
-                        case '+' :
-                            Double result = Double.parseDouble(storedValue[0]) + Double.parseDouble(storedValue[1]);
-                            updateDisplayer(result.toString());
-                            break;
-                    }
+                if(displayer.isEqualAllowedFlag()){
+                    calculator.storeNextNumber(displayer.getDataCopy());
+                    displayer.setEqualAllowedFlag(false);
+                    calculator.calculate();
+                    displayer.set(calculator.getResult().toString());
                 }
             }
         });

@@ -13,48 +13,58 @@ import java.util.Map;
 
 public class SimpleCalculator {
 
-    private HashMap<Character, String> symbolsMap = new HashMap<>();
-    private List <String> operationSymbolsList = Arrays.asList("+ - * /".split(" "));
+    private ArrayList<Double> storedNumbers = new ArrayList<>(2);
+    private final int maxStoredNumbers = 2;
+    private String storedOperation;
+    private double result;
 
-    SimpleCalculator(){
-        initSymbolsMap();
+    public SimpleCalculator(){
     }
 
-    private void initSymbolsMap(){
-        symbolsMap.put('+', "plus");
-        symbolsMap.put('-', "minus");
-        symbolsMap.put('*', "multiply");
-        symbolsMap.put('/', "divide");
-        symbolsMap.put('.', "dot");
-    }
 
-    public HashMap <Character, String> getSymbolsMap(){
-        return symbolsMap;
-    }
-
-    public List<String> getOperationSymbolsList(){
-        return operationSymbolsList;
-    }
-
-    public boolean isSymbol(char c){
-        Iterator it = symbolsMap.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            final Character operationSymbol = (Character) pair.getKey();
-            if(operationSymbol.equals(c)){
-                return true;
-            }
+    //threw new exception?
+    public void storeNextNumber(String number){
+        if(storedNumbers.size() < maxStoredNumbers){
+            Double convertedNumber = Double.parseDouble(number);
+            storedNumbers.add(convertedNumber);
         }
-        return false;
+
     }
 
-    public boolean isOperationSymbol(Character c){
-        for(String operationSymbol : operationSymbolsList){
-            if(operationSymbol.equals(String.valueOf(c))){
-                return true;
-            }
+    public void storeNextNumber(Double number){
+        if(storedNumbers.size() < maxStoredNumbers){
+            storedNumbers.add(number);
         }
-        return false;
     }
 
+    public void storeOperation(String operation){
+        this.storedOperation = operation;
+    }
+
+    public void clear(){
+        storedNumbers.clear();
+        storedOperation = "";
+    }
+
+    public void calculate(){
+        switch(storedOperation){
+            case "+":
+                result = storedNumbers.get(0) + storedNumbers.get(1);
+                break;
+            case "-":
+                result = storedNumbers.get(0) - storedNumbers.get(1);
+                break;
+            case "*":
+                result = storedNumbers.get(0) * storedNumbers.get(1);
+                break;
+            case "/":
+                result = storedNumbers.get(0) / storedNumbers.get(1);
+                break;
+
+        }
+    }
+
+    public Double getResult(){
+        return result;
+    }
 }
