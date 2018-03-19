@@ -88,7 +88,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 displayer.clear();
-                calculator.clearAll();
+                calculator.clear();
                 displayer.setInitialData();
             }
         });
@@ -144,7 +144,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
                     calculator.calculate();
                     String result = calculator.getResult().toString();
                     displayer.set(result);
-                    calculator.deleteLastStoredNumber();
+                    //calculator.deleteLastStoredNumber();
                     calculator.storeNextNumber(result);
                    if(displayer.getDataCopy().contains(".")){
                         displayer.setDotAllowedFlag(false);
