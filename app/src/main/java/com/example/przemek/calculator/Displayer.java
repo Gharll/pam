@@ -10,90 +10,57 @@ public class Displayer {
 
     private TextView tv;
     private String data;
-    private String initialData = "0";
-
-    /*The flags specify the rules how we can use calculator, how we can
-    * entering the data and how it should be displayed*/
-
-    /*To prevent entering more than one dot in number e.g. 2.0.0222.3 */
-    private boolean isDotAllowedFlag = true;
-
-    /*Does it make sense to do equal operation and calculate the result*/
-    private boolean isEqualAllowedFlag = false;
-
-    /*To provide initial value shown on displayer which should disappeared
-     * after entering data by user e.g. user is clicking a button */
-    private boolean isInitialValueFlag = true;
-
+    private final String INITIAL_DATA = "0";
+    private final int MAX_NUMBER_LENGTH = 16;
     private Symbols symbols = new Symbols();
+    private Flags flags = new Flags();
+
 
     public Displayer(TextView tv){
         this.tv = tv;
         setInitialData();
     }
 
-    public boolean isDotAllowedFlag() {
-        return isDotAllowedFlag;
-    }
-
-    public void setDotAllowedFlag(boolean dotAllowedFlag) {
-        this.isDotAllowedFlag = dotAllowedFlag;
-    }
-
-    public boolean isEqualAllowedFlag() {
-        return isEqualAllowedFlag;
-    }
-
-    public void setEqualAllowedFlag(boolean equalAllowedFlag) {
-        this.isEqualAllowedFlag = equalAllowedFlag;
-    }
-
-    public boolean isInitialValueFlag() {
-        return isInitialValueFlag;
-    }
-
-    public void setInitialValueFlag(boolean initialValueFlag) {
-        isInitialValueFlag = initialValueFlag;
-    }
-
-    public String getInitialData(){
-        return initialData;
-    }
-
-    public int getDataLength(){
-        return data.length();
-    }
-
-    public TextView getTextView(){
-        return tv;
+    public Flags getFlags(){
+        return flags;
     }
 
     public void append(String s){
-        if(isInitialValueFlag){
-            clear();
-            isInitialValueFlag = false;
+        int max;
+        if(data.charAt(0) == '-'){
+            max = MAX_NUMBER_LENGTH + 1;
+        } else {
+            max = MAX_NUMBER_LENGTH;
         }
-        this.set(this.data + s);
+
+        if(data.length() < max){
+            if(flags.isInitialValue()){
+                clear();
+                flags.setInitialValue(false);
+                flags.setDotAllowed(true);
+            }
+            String appended = this.data + s;
+            set(appended);
+        }
     }
 
     public void setInitialData(){
-        isInitialValueFlag = true;
-        set(initialData);
+        flags.setInitialValue(true);
+        set(INITIAL_DATA);
     }
 
-    /*set data to display without checking any condition*/
     public void set(String s){
         this.data = s;
         tv.setText(data);
     }
 
-
-    public String getDataCopy(){
-        return new String(data);
+    public String getData(){
+        return data;
     }
 
-    public Character getLastCharacterCopy(){
-        return new Character(data.charAt(data.length() - 1));
+    public Character getLastCharacter(){
+        int endPosition = data.length() - 1;
+        return data.charAt(endPosition);
     }
 
     boolean isEmpty(){
@@ -101,28 +68,49 @@ public class Displayer {
     }
 
     public void clear(){
-        this.set("");
-        isDotAllowedFlag = true;
-        isEqualAllowedFlag = true;
+        set("");
+        flags.setDotAllowed(false);
+        flags.setEqualAllowed(true);
     }
 
     public void deleteLastCharacter(){
         if(data.length() < 2){
             setInitialData();
         } else {
-            if(getLastCharacterCopy().equals('.')){
-                isDotAllowedFlag = true;
+            if (!isEmpty()) {
+                if(getLastCharacter().equals('.')){
+                    flags.setDotAllowed(true);
+                }
+                int endPosition = data.length() -1;
+                String withoutLastCharacter
+                        = data.substring(0, endPosition);
+                this.set(withoutLastCharacter);
             }
-            this.set(data.substring(0, data.length() -1));
         }
 
     }
 
     public boolean isLastCharacterSymbol(){
         if(!isEmpty()){
-            return symbols.isSymbol(data.charAt(data.length()-1));
+            return symbols.isSymbol(getLastCharacter());
         } else{
             return false;
         }
+    }
+
+    public void negate(){
+        if(!isEmpty() && !getFlags().isInitialValue()){
+            char fistCharacter = data.charAt(0);
+            if(fistCharacter == '-'){
+                set(data.substring(1, data.length()));
+            } else {
+                appendAtBegining("-");
+            }
+        }
+    }
+
+    //dangerous
+    private void appendAtBegining(String s){
+        set(s + data);
     }
 }

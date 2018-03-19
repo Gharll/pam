@@ -1,39 +1,40 @@
 package com.example.przemek.calculator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Created by Przemek on 06.03.2018.
- */
-
 public class SimpleCalculator {
 
-    private ArrayList<Double> storedNumbers = new ArrayList<>(2);
-    private final int maxStoredNumbers = 2;
+    private final int MAX_STORED_NUMBER_SIZE = 2;
+    private Double storedNumbers[] = new Double[MAX_STORED_NUMBER_SIZE];
+
+    /*StoredNumbersPointer is defined to specify where store next number */
+    private int storedNumbersPointer = 0;
     private String storedOperation;
     private double result;
 
     public SimpleCalculator(){
+        clear();
     }
 
-
-    //threw new exception?
-    public void storeNextNumber(String number){
-        if(storedNumbers.size() < maxStoredNumbers){
-            Double convertedNumber = Double.parseDouble(number);
-            storedNumbers.add(convertedNumber);
-        }
-
+    public void clear(){
+        resetStoredNumbers();
+        resetStoredNumberPointer();
     }
 
-    public void storeNextNumber(Double number){
-        if(storedNumbers.size() < maxStoredNumbers){
-            storedNumbers.add(number);
+    public void resetStoredNumbers(){
+        storedNumbers[0] = 0.0;
+        storedNumbers[1] = 0.0;
+    }
+
+    public void resetStoredNumberPointer(){
+        storedNumbersPointer = 0;
+    }
+
+    public void storeNumber(String value) {
+        storedNumbers[storedNumbersPointer] = Double.parseDouble(value);
+    }
+
+    public void pointAtNextNumber(){
+        if(storedNumbersPointer < MAX_STORED_NUMBER_SIZE - 1){
+            storedNumbersPointer++;
         }
     }
 
@@ -41,36 +42,27 @@ public class SimpleCalculator {
         this.storedOperation = operation;
     }
 
-    public void clear(){
-        storedNumbers.clear();
-        storedOperation = "";
-    }
-
     public void calculate(){
-        if (isReadyToCalculate()){
+        if(storedOperation != null){
             switch(storedOperation){
                 case "+":
-                    result = storedNumbers.get(0) + storedNumbers.get(1);
+                    result = storedNumbers[0] + storedNumbers[1];
                     break;
                 case "-":
-                    result = storedNumbers.get(0) - storedNumbers.get(1);
+                    result = storedNumbers[0] - storedNumbers[1];
                     break;
                 case "*":
-                    result = storedNumbers.get(0) * storedNumbers.get(1);
+                    result = storedNumbers[0] * storedNumbers[1];
                     break;
                 case "/":
-                    result = storedNumbers.get(0) / storedNumbers.get(1);
+                    result = storedNumbers[0] / storedNumbers[1];
                     break;
             }
         }
-
     }
 
     public Double getResult(){
         return result;
     }
 
-    public boolean isReadyToCalculate(){
-        return storedNumbers.size() == 2 && storedOperation != null && storedOperation.length() > 0;
-    }
 }

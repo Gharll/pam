@@ -7,10 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Przemek on 08.03.2018.
- */
-
 public class Symbols {
 
     private HashMap<Character, String> symbolsMap;
