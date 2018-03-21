@@ -9,11 +9,13 @@ public class Flags {
     private boolean isDotAllowed;
     private boolean isEqualAllowed;
     private boolean isInitialValue;
+    private boolean isError;
 
     public Flags(){
         isDotAllowed = false;
         isEqualAllowed = false;
         isInitialValue = true;
+        isError = false;
     }
 
     public boolean isDotAllowed() {
@@ -38,5 +40,13 @@ public class Flags {
 
     public void setInitialValue(boolean initialValue) {
         isInitialValue = initialValue;
+    }
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public void setError(boolean error) {
+        isError = error;
     }
 }

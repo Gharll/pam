@@ -118,11 +118,16 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (!displayer.isEmpty() && !displayer.isLastCharacterSymbol()) {
-                        calculator.storeNumber(displayer.getData());
-                        calculator.pointAtNextNumber();
-                        calculator.storeOperation(String.valueOf(operationSymbol));
-                        displayer.clear();
-                        displayer.setInitialData();
+                        try {
+                            calculator.storeNumber(displayer.getData());
+                            calculator.pointAtNextNumber();
+                            calculator.storeOperation(String.valueOf(operationSymbol));
+                            displayer.clear();
+                            displayer.setInitialData();
+                        }catch (NumberFormatException e) {
+                            handleBadInput();
+                        }
+
                     }
                 }
             });
@@ -161,20 +166,33 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!displayer.isLastCharacterSymbol()){
-                    calculator.storeNumber(displayer.getData());
-                    calculator.resetStoredNumberPointer();
-                    displayer.getFlags().setEqualAllowed(false);
-                    calculator.calculate();
-                    String result = calculator.getResult().toString();
-                    result = formatResult(result);
-                    displayer.set(result);
-                    calculator.storeNumber(result);
-                    if (displayer.getData().contains(".")) {
-                        displayer.getFlags().setDotAllowed(false);
+                    try{
+                        calculator.storeNumber(displayer.getData());
+                        calculator.resetStoredNumberPointer();
+                        displayer.getFlags().setEqualAllowed(false);
+                        calculator.calculate();
+                        String result = calculator.getResult().toString();
+                        result = formatResult(result);
+                        displayer.set(result);
+                        calculator.storeNumber(result);
+                        if (displayer.getData().contains(".")) {
+                            displayer.getFlags().setDotAllowed(false);
+                        } else {
+                            displayer.getFlags().setDotAllowed(true);
+                        }
+                    } catch(NumberFormatException e){
+                        handleBadInput();
                     }
+
                 }
             }
         });
+    }
+
+    private void handleBadInput(){
+        displayer.set("Bad input");
+        displayer.getFlags().setError(true);
+        calculator.clear();
     }
 
     private String formatResult(String result){

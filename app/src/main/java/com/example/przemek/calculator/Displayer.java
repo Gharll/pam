@@ -2,10 +2,6 @@ package com.example.przemek.calculator;
 
 import android.widget.TextView;
 
-/**
- * Created by Przemek on 08.03.2018.
- */
-
 public class Displayer {
 
     private TextView tv;
@@ -50,8 +46,19 @@ public class Displayer {
     }
 
     public void set(String s){
-        this.data = s;
-        tv.setText(data);
+        if(getFlags().isError()){
+            getFlags().setError(false);
+            char lastCharacter = s.charAt(s.length()-1);
+            if(Character.isDigit(lastCharacter)) {
+                set(String.valueOf(lastCharacter));
+            } else {
+                setInitialData();
+            }
+        } else {
+            this.data = s;
+            tv.setText(data);
+        }
+
     }
 
     public String getData(){
@@ -74,20 +81,21 @@ public class Displayer {
     }
 
     public void deleteLastCharacter(){
-        if(data.length() < 2){
+        if(data.length() <= 1){
             setInitialData();
         } else {
             if (!isEmpty()) {
                 if(getLastCharacter().equals('.')){
                     flags.setDotAllowed(true);
                 }
-                int endPosition = data.length() -1;
-                String withoutLastCharacter
-                        = data.substring(0, endPosition);
-                this.set(withoutLastCharacter);
+                this.set(getTextWithoutLastCharacter(data));
             }
         }
+    }
 
+    public String getTextWithoutLastCharacter(String text){
+        int endPosition = text.length() -1;
+        return text.substring(0, endPosition);
     }
 
     public boolean isLastCharacterSymbol(){
@@ -109,7 +117,6 @@ public class Displayer {
         }
     }
 
-    //dangerous
     private void appendAtBegining(String s){
         set(s + data);
     }
