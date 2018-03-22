@@ -1,5 +1,8 @@
 package com.example.przemek.calculator;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.TextView;
 
 public class Displayer {
@@ -120,4 +123,21 @@ public class Displayer {
     private void appendAtBegining(String s){
         set(s + data);
     }
+
+    public void save(Bundle savedInstanceState){
+        savedInstanceState.putString("data", getData());
+        savedInstanceState.putParcelable("flags", getFlags());
+    }
+
+    public void restore(Bundle outState){
+        data = outState.getString("data");
+        flags = outState.getParcelable("flags");
+        refresh();
+    }
+
+    private void refresh(){
+        tv.setText(data);
+    }
+
+
 }

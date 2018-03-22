@@ -1,10 +1,9 @@
 package com.example.przemek.calculator;
 
-/**
- * Created by Przemek on 19.03.2018.
- */
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Flags {
+public class Flags implements Parcelable {
 
     private boolean isDotAllowed;
     private boolean isEqualAllowed;
@@ -17,6 +16,38 @@ public class Flags {
         isInitialValue = true;
         isError = false;
     }
+
+    protected Flags(Parcel in) {
+        isDotAllowed = in.readByte() != 0;
+        isEqualAllowed = in.readByte() != 0;
+        isInitialValue = in.readByte() != 0;
+        isError = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (isDotAllowed ? 1 : 0));
+        dest.writeByte((byte) (isEqualAllowed ? 1 : 0));
+        dest.writeByte((byte) (isInitialValue ? 1 : 0));
+        dest.writeByte((byte) (isError ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Flags> CREATOR = new Creator<Flags>() {
+        @Override
+        public Flags createFromParcel(Parcel in) {
+            return new Flags(in);
+        }
+
+        @Override
+        public Flags[] newArray(int size) {
+            return new Flags[size];
+        }
+    };
 
     public boolean isDotAllowed() {
         return isDotAllowed;

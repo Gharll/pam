@@ -1,9 +1,11 @@
 package com.example.przemek.calculator;
 
+import android.os.Bundle;
+
 public class SimpleCalculator {
 
     private final int MAX_STORED_NUMBER_SIZE = 2;
-    private Double storedNumbers[] = new Double[MAX_STORED_NUMBER_SIZE];
+    private double storedNumbers[] = new double[MAX_STORED_NUMBER_SIZE];
 
     /*StoredNumbersPointer is defined to specify where store next number */
     private int storedNumbersPointer = 0;
@@ -17,6 +19,30 @@ public class SimpleCalculator {
     public void clear(){
         resetStoredNumbers();
         resetStoredNumberPointer();
+    }
+
+    public double[] getStoredNumbers() {
+        return storedNumbers;
+    }
+
+    public void setStoredNumbers(double[] storedNumbers) {
+        this.storedNumbers = storedNumbers;
+    }
+
+    public int getStoredNumbersPointer() {
+        return storedNumbersPointer;
+    }
+
+    public void setStoredNumbersPointer(int storedNumbersPointer) {
+        this.storedNumbersPointer = storedNumbersPointer;
+    }
+
+    public String getStoredOperation() {
+        return storedOperation;
+    }
+
+    public void setStoredOperation(String storedOperation) {
+        this.storedOperation = storedOperation;
     }
 
     public void resetStoredNumbers(){
@@ -63,6 +89,16 @@ public class SimpleCalculator {
 
     public Double getResult(){
         return result;
+    }
+
+    public void save(Bundle savedInstanceState){
+        savedInstanceState.putDoubleArray("storedNumber", storedNumbers);
+        savedInstanceState.putString("storedOperation", storedOperation);
+    }
+
+    public void restore(Bundle outState){
+       storedNumbers = outState.getDoubleArray("storedNumber");
+       storedOperation = outState.getString("storedOperation");
     }
 
 }

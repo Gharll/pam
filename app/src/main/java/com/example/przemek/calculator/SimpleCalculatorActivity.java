@@ -17,15 +17,23 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
     private SimpleCalculator calculator;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle outState) {
+        super.onCreate(outState);
         setContentView(R.layout.activity_simple_calculator);
         initializeObject();
         initializeEvent();
 
-        if (savedInstanceState != null) {
-            displayer.set(savedInstanceState.getString("displayerData"));
+        if (outState != null) {
+            displayer.restore(outState);
+            calculator.restore(outState);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        displayer.save(savedInstanceState);
+        calculator.save(savedInstanceState);
     }
 
     protected void initializeObject() {
@@ -46,11 +54,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         createEqualEvent();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString("displayerData", displayer.getData());
-    }
+
 
     private Object findViewByName(String name) {
         int id = getResources().getIdentifier(name, "id", getPackageName());
