@@ -41,6 +41,7 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         createSqrtEvent();
         createPowerEvent();
         createPowerSquareEvent();
+        createPercentEvent();
     }
 
     void createSinEvent(){

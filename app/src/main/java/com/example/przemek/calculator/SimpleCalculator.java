@@ -1,5 +1,7 @@
 package com.example.przemek.calculator;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Przemek on 22.03.2018.
  */
@@ -9,6 +11,7 @@ public class SimpleCalculator {
     protected DataStorage dataStorage = new DataStorage();
     protected Symbols symbols = new Symbols();
     protected Displayer displayer;
+
 
     public SimpleCalculator(Displayer displayer){
         this.displayer = displayer;
@@ -84,8 +87,7 @@ public class SimpleCalculator {
                 dataStorage.resetStoredNumberPointer();
                 displayer.getFlags().setEqualAllowed(false);
                 this.calculate();
-                String result = dataStorage.getResult().toString();
-                result = formatResult(result);
+                String result = dataStorage.getFormattedResult();
                 displayer.set(result);
                 dataStorage.storeNumber(result);
                 if (displayer.getData().contains(".")) {
@@ -102,25 +104,27 @@ public class SimpleCalculator {
 
     public void calculate(){
         if(dataStorage.getStoredOperation() != null){
+            BigDecimal firstNumber = dataStorage.getStoredNumbers()[0];
+            BigDecimal secondNumber = dataStorage.getStoredNumbers()[1];
             switch(dataStorage.getStoredOperation()){
                 case "+":
-                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
-                            + dataStorage.getStoredNumbers()[1]);
+                    dataStorage.setResult(firstNumber.add(secondNumber));
                     break;
                 case "-":
-                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
-                            - dataStorage.getStoredNumbers()[1]);
+                    dataStorage.setResult(firstNumber.subtract(secondNumber));
                     break;
                 case "*":
-                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
-                            * dataStorage.getStoredNumbers()[1]);
+                    dataStorage.setResult(firstNumber.multiply(secondNumber));
                     break;
                 case "/":
-                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
-                            / dataStorage.getStoredNumbers()[1]);
+                    dataStorage.setResult(divideFormatted(firstNumber, secondNumber));
                     break;
             }
         }
+    }
+
+    public BigDecimal divideFormatted(BigDecimal firstNumber, BigDecimal secondNumber){
+        return firstNumber.divide(secondNumber, dataStorage.getPrecision(), BigDecimal.ROUND_FLOOR);
     }
 
     private void handleBadInput(){
@@ -129,11 +133,4 @@ public class SimpleCalculator {
         dataStorage.clear();
     }
 
-    private String formatResult(String result){
-        if(result.charAt(result.length()-2) == '.'
-                && result.charAt(result.length()-1) == '0'){
-            result = result.substring(0, result.length()-2);
-        }
-        return result;
-    }
 }

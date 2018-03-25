@@ -1,6 +1,8 @@
 package com.example.przemek.calculator;
 
 
+import java.math.BigDecimal;
+
 public class AdvancedCalculator extends SimpleCalculator {
 
     public AdvancedCalculator(Displayer displayer){
@@ -54,22 +56,33 @@ public class AdvancedCalculator extends SimpleCalculator {
     }
 
     public void handlePowerEvent(){
+        if(super.dataStorage.getStoredNumbersPointer() == 0){
 
+        }
     }
 
     public void handlePercentEvent(){
-
+        int pointer = super.dataStorage.getStoredNumbersPointer();
+        if(pointer == 0){
+            showResult(0.0);
+        } else if(pointer == 1) {
+            BigDecimal first = dataStorage.getStoredNumbers()[0];
+            BigDecimal second = new BigDecimal(displayer.getData());
+            // that means: result = first*second/100
+            dataStorage.getStoredNumbers()[1] =  super.divideFormatted(first, second);
+            super.handleEqual();
+        }
     }
 
     @Override
     public void calculate(){
         super.calculate();
-        if(dataStorage.getStoredOperation() != null){
-            switch(dataStorage.getStoredOperation()){
-                case "+":
+        if(super.dataStorage.getStoredOperation() != null){
+            switch(super.dataStorage.getStoredOperation()){
+                /*case "+":
                     dataStorage.setResult(dataStorage.getStoredNumbers()[0]
                             + dataStorage.getStoredNumbers()[1]);
-                    break;
+                    break;*/
             }
         }
     }
