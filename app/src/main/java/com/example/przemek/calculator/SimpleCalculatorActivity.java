@@ -9,38 +9,44 @@ import android.widget.TextView;
 import java.util.Iterator;
 import java.util.Map;
 
-public class SimpleCalculatorActivity extends AppCompatActivity {
+public class SimpleCalculatorActivity extends CalculatorActivity {
 
+
+    protected Displayer displayer;
     private SimpleCalculator simpleCalculator;
-    private Symbols symbols;
-    private Displayer displayer;
-    private SimpleCalculator calculator;
+    private Symbols symbols = new Symbols();
 
     @Override
     protected void onCreate(Bundle outState) {
         super.onCreate(outState);
-        setContentView(R.layout.activity_simple_calculator);
         initializeObject();
         initializeEvent();
 
         if (outState != null) {
             displayer.restore(outState);
-            calculator.restore(outState);
+            //dataStorage.restore(outState);
         }
     }
 
+
     @Override
+    protected int getLayoutResourceId(){
+        return R.layout.activity_simple_calculator;
+    }
+
+   /* @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         displayer.save(savedInstanceState);
         calculator.save(savedInstanceState);
-    }
+    }*/
 
     protected void initializeObject() {
         TextView textView = (TextView) findViewById(R.id.tv_displayer);
         displayer = new Displayer(textView);
-        calculator = new SimpleCalculator();
+        simpleCalculator = new SimpleCalculator(displayer);
         symbols = new Symbols();
+
     }
 
     protected void initializeEvent() {
@@ -69,7 +75,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    displayer.append(String.valueOf(number));
+                    simpleCalculator.handleNumber(number);
                 }
             });
         }
@@ -80,9 +86,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!displayer.isEmpty() && !displayer.getFlags().isInitialValue()){
-                    displayer.append("0");
-                }
+                simpleCalculator.handleZeroNumber();
             }
         });
     }
@@ -93,7 +97,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    displayer.deleteLastCharacter();
+                simpleCalculator.handleBackspace();
             }
         });
     }
@@ -103,9 +107,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayer.clear();
-                calculator.clear();
-                displayer.setInitialData();
+                simpleCalculator.handleClear();
             }
         });
     }
@@ -121,18 +123,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!displayer.isEmpty() && !displayer.isLastCharacterSymbol()) {
-                        try {
-                            calculator.storeNumber(displayer.getData());
-                            calculator.pointAtNextNumber();
-                            calculator.storeOperation(String.valueOf(operationSymbol));
-                            displayer.clear();
-                            displayer.setInitialData();
-                        }catch (NumberFormatException e) {
-                            handleBadInput();
-                        }
-
-                    }
+                   simpleCalculator.handleOperation(operationSymbol);
                 }
             });
         }
@@ -143,13 +134,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!displayer.isEmpty()
-                        && !displayer.isLastCharacterSymbol()
-                        && displayer.getFlags().isDotAllowed()
-                        && !displayer.getFlags().isInitialValue()) {
-                    displayer.getFlags().setDotAllowed(false);
-                    displayer.append(".");
-                }
+            simpleCalculator.handleDot();
             }
         });
     }
@@ -159,7 +144,7 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                displayer.negate();
+                simpleCalculator.handleNegate();
             }
         });
     }
@@ -169,42 +154,9 @@ public class SimpleCalculatorActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!displayer.isLastCharacterSymbol()){
-                    try{
-                        calculator.storeNumber(displayer.getData());
-                        calculator.resetStoredNumberPointer();
-                        displayer.getFlags().setEqualAllowed(false);
-                        calculator.calculate();
-                        String result = calculator.getResult().toString();
-                        result = formatResult(result);
-                        displayer.set(result);
-                        calculator.storeNumber(result);
-                        if (displayer.getData().contains(".")) {
-                            displayer.getFlags().setDotAllowed(false);
-                        } else {
-                            displayer.getFlags().setDotAllowed(true);
-                        }
-                    } catch(NumberFormatException e){
-                        handleBadInput();
-                    }
-
-                }
+                simpleCalculator.handleEqual();
             }
         });
-    }
-
-    private void handleBadInput(){
-        displayer.set("Bad input");
-        displayer.getFlags().setError(true);
-        calculator.clear();
-    }
-
-    private String formatResult(String result){
-        if(result.charAt(result.length()-2) == '.'
-                && result.charAt(result.length()-1) == '0'){
-            result = result.substring(0, result.length()-2);
-        }
-        return result;
     }
 
 }

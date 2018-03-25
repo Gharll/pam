@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.przemek.calculator.SimpleCalculatorActivity">
+    tools:context="com.example.przemek.calculator.AdvancedCalculatorActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +21,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_displayer"
@@ -31,6 +30,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
+                android:text="test"
                 android:textAlignment="textEnd"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,312 +38,215 @@
                 tools:layout_editor_absoluteY="5dp" />
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="9dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/btn_bksp"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Bksp"
-                app:layout_constraintBottom_toTopOf="@+id/btn_number_7"
-                app:layout_constraintEnd_toStartOf="@+id/btn_clear"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btn_clear"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:text="C"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-                app:layout_constraintEnd_toStartOf="@+id/btn_negate"
-                app:layout_constraintStart_toEndOf="@+id/btn_bksp"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btn_negate"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:text="±"
-                app:layout_constraintBottom_toTopOf="@+id/btn_operation_divide"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_clear"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btn_number_7"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="7"
-                app:layout_constraintBottom_toTopOf="@+id/btn_number_4"
-                app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_bksp" />
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
-                app:layout_constraintEnd_toStartOf="@+id/btn_operation_divide"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/btn_number_7"
-                app:layout_constraintTop_toBottomOf="@+id/btn_clear">
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/btn_number_8"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="8"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_number_9"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/btn_bksp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Bksp" />
 
                 <Button
-                    android:id="@+id/btn_number_9"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="4dp"
-                    android:text="9"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_number_8"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <Button
-                android:id="@+id/btn_operation_divide"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:text="/"
-                app:layout_constraintBottom_toTopOf="@+id/btn_operation_multiply"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout"
-                app:layout_constraintTop_toBottomOf="@+id/btn_negate" />
-
-            <Button
-                android:id="@+id/btn_number_4"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="4"
-                app:layout_constraintBottom_toTopOf="@+id/btn_number_1"
-                app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_number_7" />
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout2"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
-                app:layout_constraintEnd_toStartOf="@+id/btn_operation_multiply"
-                app:layout_constraintStart_toEndOf="@+id/btn_number_4"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+                    android:id="@+id/btn_clear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="C" />
 
                 <Button
-                    android:id="@+id/btn_number_5"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_number_6"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/btn_negate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="±" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/btn_number_6"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="4dp"
-                    android:text="6"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_number_5"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                    android:id="@+id/btn_number_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="7" />
 
-            <Button
-                android:id="@+id/btn_operation_multiply"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:text="*"
-                app:layout_constraintBottom_toTopOf="@+id/btn_operation_minus"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout2"
-                app:layout_constraintTop_toBottomOf="@+id/btn_operation_divide" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_number_1"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="1"
-                app:layout_constraintBottom_toTopOf="@+id/btn_number_0"
-                app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
-                app:layout_constraintHorizontal_bias="0.6"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_number_4" />
+                    <Button
+                        android:id="@+id/btn_number_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="8" />
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout3"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
-                app:layout_constraintEnd_toStartOf="@+id/btn_operation_minus"
-                app:layout_constraintStart_toEndOf="@+id/btn_number_1"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+                    <Button
+                        android:id="@+id/btn_number_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="9" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/btn_number_2"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="2"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_number_3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/btn_operation_divide"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="/" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/btn_number_3"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="4dp"
-                    android:text="3"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_number_2"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                    android:id="@+id/btn_number_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="4" />
 
-            <Button
-                android:id="@+id/btn_operation_minus"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:text="-"
-                app:layout_constraintBottom_toTopOf="@+id/btn_operation_plus"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
-                app:layout_constraintTop_toBottomOf="@+id/btn_operation_multiply" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/constraintLayout4"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_operation_plus"
-                app:layout_constraintStart_toEndOf="@+id/btn_number_0"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+                    <Button
+                        android:id="@+id/btn_number_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="5" />
+
+                    <Button
+                        android:id="@+id/btn_number_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="6" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/btn_operation_dot"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="."
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_operation_equal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:id="@+id/btn_operation_multiply"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="*" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <Button
-                    android:id="@+id/btn_operation_equal"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="4dp"
-                    android:text="="
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/btn_operation_dot"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+                    android:id="@+id/btn_number_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="1" />
 
-            <Button
-                android:id="@+id/btn_number_0"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="0"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_number_1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_operation_plus"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:text="+"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
-                app:layout_constraintTop_toBottomOf="@+id/btn_operation_minus" />
+                    <Button
+                        android:id="@+id/btn_number_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="2" />
 
-        </android.support.constraint.ConstraintLayout>
+                    <Button
+                        android:id="@+id/btn_number_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="3" />
+                </LinearLayout>
 
+                <Button
+                    android:id="@+id/btn_operation_minus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="-" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/btn_number_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_operation_dot"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="." />
+
+                    <Button
+                        android:id="@+id/btn_operation_equal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="=" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_operation_plus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+" />
+
+            </TableRow>
+
+        </TableLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

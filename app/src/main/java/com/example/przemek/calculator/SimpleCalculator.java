@@ -1,104 +1,139 @@
 package com.example.przemek.calculator;
 
-import android.os.Bundle;
+/**
+ * Created by Przemek on 22.03.2018.
+ */
 
 public class SimpleCalculator {
 
-    private final int MAX_STORED_NUMBER_SIZE = 2;
-    private double storedNumbers[] = new double[MAX_STORED_NUMBER_SIZE];
+    protected DataStorage dataStorage = new DataStorage();
+    protected Symbols symbols = new Symbols();
+    protected Displayer displayer;
 
-    /*StoredNumbersPointer is defined to specify where store next number */
-    private int storedNumbersPointer = 0;
-    private String storedOperation;
-    private double result;
-
-    public SimpleCalculator(){
-        clear();
+    public SimpleCalculator(Displayer displayer){
+        this.displayer = displayer;
     }
 
-    public void clear(){
-        resetStoredNumbers();
-        resetStoredNumberPointer();
-    }
-
-    public double[] getStoredNumbers() {
-        return storedNumbers;
-    }
-
-    public void setStoredNumbers(double[] storedNumbers) {
-        this.storedNumbers = storedNumbers;
-    }
-
-    public int getStoredNumbersPointer() {
-        return storedNumbersPointer;
-    }
-
-    public void setStoredNumbersPointer(int storedNumbersPointer) {
-        this.storedNumbersPointer = storedNumbersPointer;
-    }
-
-    public String getStoredOperation() {
-        return storedOperation;
-    }
-
-    public void setStoredOperation(String storedOperation) {
-        this.storedOperation = storedOperation;
-    }
-
-    public void resetStoredNumbers(){
-        storedNumbers[0] = 0.0;
-        storedNumbers[1] = 0.0;
-    }
-
-    public void resetStoredNumberPointer(){
-        storedNumbersPointer = 0;
-    }
-
-    public void storeNumber(String value) {
-        storedNumbers[storedNumbersPointer] = Double.parseDouble(value);
-    }
-
-    public void pointAtNextNumber(){
-        if(storedNumbersPointer < MAX_STORED_NUMBER_SIZE - 1){
-            storedNumbersPointer++;
+    public void handleError(){
+        if(displayer.getFlags().isError()){
+            displayer.getFlags().setError(false);
+            handleClear();
         }
     }
 
-    public void storeOperation(String operation){
-        this.storedOperation = operation;
+    public void handleClear(){
+        displayer.clear();
+        dataStorage.clear();
+        displayer.setInitialData();
+    }
+
+    public void handleNumber(int number){
+        //handleError();
+        displayer.append(String.valueOf(number));
+    }
+
+    public void handleZeroNumber(){
+        //handleError();
+        if(!displayer.isEmpty() && !displayer.getFlags().isInitialValue()){
+            handleNumber(0);
+        }
+    }
+
+    public void handleOperation(char operationSymbol){
+        //handleError();
+        if (!displayer.isEmpty() && !displayer.isLastCharacterSymbol()) {
+            try {
+                dataStorage.storeNumber(displayer.getData());
+                dataStorage.pointAtNextNumber();
+                dataStorage.storeOperation(String.valueOf(operationSymbol));
+                displayer.clear();
+                displayer.setInitialData();
+            }catch (NumberFormatException e) {
+                handleBadInput();
+            }
+
+        }
+    }
+
+    public void handleBackspace(){
+        //handleError();
+        displayer.deleteLastCharacter();
+    }
+
+    public void handleDot(){
+        //handleError();
+        if (!displayer.isEmpty()
+                && !displayer.isLastCharacterSymbol()
+                && displayer.getFlags().isDotAllowed()
+                && !displayer.getFlags().isInitialValue()) {
+            displayer.getFlags().setDotAllowed(false);
+            displayer.append(".");
+        }
+    }
+
+    public void handleNegate(){
+        //handleError();
+        displayer.negate();
+    }
+
+    public void handleEqual(){
+        //handleError();
+        if(!displayer.isLastCharacterSymbol()){
+            try{
+                dataStorage.storeNumber(displayer.getData());
+                dataStorage.resetStoredNumberPointer();
+                displayer.getFlags().setEqualAllowed(false);
+                this.calculate();
+                String result = dataStorage.getResult().toString();
+                result = formatResult(result);
+                displayer.set(result);
+                dataStorage.storeNumber(result);
+                if (displayer.getData().contains(".")) {
+                    displayer.getFlags().setDotAllowed(false);
+                } else {
+                    displayer.getFlags().setDotAllowed(true);
+                }
+            } catch(NumberFormatException e){
+                handleBadInput();
+            }
+
+        }
     }
 
     public void calculate(){
-        if(storedOperation != null){
-            switch(storedOperation){
+        if(dataStorage.getStoredOperation() != null){
+            switch(dataStorage.getStoredOperation()){
                 case "+":
-                    result = storedNumbers[0] + storedNumbers[1];
+                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
+                            + dataStorage.getStoredNumbers()[1]);
                     break;
                 case "-":
-                    result = storedNumbers[0] - storedNumbers[1];
+                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
+                            - dataStorage.getStoredNumbers()[1]);
                     break;
                 case "*":
-                    result = storedNumbers[0] * storedNumbers[1];
+                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
+                            * dataStorage.getStoredNumbers()[1]);
                     break;
                 case "/":
-                    result = storedNumbers[0] / storedNumbers[1];
+                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
+                            / dataStorage.getStoredNumbers()[1]);
                     break;
             }
         }
     }
 
-    public Double getResult(){
+    private void handleBadInput(){
+        displayer.set("Bad input");
+        displayer.getFlags().setError(true);
+        dataStorage.clear();
+    }
+
+    private String formatResult(String result){
+        if(result.charAt(result.length()-2) == '.'
+                && result.charAt(result.length()-1) == '0'){
+            result = result.substring(0, result.length()-2);
+        }
         return result;
     }
-
-    public void save(Bundle savedInstanceState){
-        savedInstanceState.putDoubleArray("storedNumber", storedNumbers);
-        savedInstanceState.putString("storedOperation", storedOperation);
-    }
-
-    public void restore(Bundle outState){
-       storedNumbers = outState.getDoubleArray("storedNumber");
-       storedOperation = outState.getString("storedOperation");
-    }
-
 }
