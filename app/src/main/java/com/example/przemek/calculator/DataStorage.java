@@ -10,7 +10,6 @@ public class DataStorage {
 
     private final int MAX_STORED_NUMBER_SIZE = 2;
     private BigDecimal storedNumbers[] = new BigDecimal[MAX_STORED_NUMBER_SIZE];
-
     /*StoredNumbersPointer is defined to specify where store next number */
     private int storedNumbersPointer = 0;
     private String storedOperation;
@@ -20,6 +19,7 @@ public class DataStorage {
     public DataStorage(){
         clear();
     }
+
 
     public void clear(){
         resetStoredNumbers();
@@ -107,5 +107,9 @@ public class DataStorage {
 
     public int getPrecision(){
         return PRECISON;
+    }
+
+    public void setStoredNumber(int index, BigDecimal value){
+        storedNumbers[index] = value;
     }
 }

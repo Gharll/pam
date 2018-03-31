@@ -2,19 +2,19 @@ package com.example.przemek.calculator;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Przemek on 22.03.2018.
- */
-
 public class SimpleCalculator {
 
     protected DataStorage dataStorage = new DataStorage();
-    protected Symbols symbols = new Symbols();
     protected Displayer displayer;
 
 
     public SimpleCalculator(Displayer displayer){
         this.displayer = displayer;
+    }
+
+    public SimpleCalculator(Displayer displayer, DataStorage dataStorage){
+        this.displayer = displayer;
+        this.dataStorage = dataStorage;
     }
 
     public void handleError(){
@@ -82,23 +82,26 @@ public class SimpleCalculator {
     public void handleEqual(){
         //handleError();
         if(!displayer.isLastCharacterSymbol()){
-            try{
                 dataStorage.storeNumber(displayer.getData());
-                dataStorage.resetStoredNumberPointer();
-                displayer.getFlags().setEqualAllowed(false);
-                this.calculate();
-                String result = dataStorage.getFormattedResult();
-                displayer.set(result);
-                dataStorage.storeNumber(result);
-                if (displayer.getData().contains(".")) {
-                    displayer.getFlags().setDotAllowed(false);
-                } else {
-                    displayer.getFlags().setDotAllowed(true);
-                }
-            } catch(NumberFormatException e){
-                handleBadInput();
-            }
+                handleCalculate();
+        }
+    }
 
+    public void handleCalculate(){
+        dataStorage.resetStoredNumberPointer();
+        displayer.getFlags().setEqualAllowed(false);
+        this.calculate();
+        try{
+            String result = dataStorage.getFormattedResult();
+            displayer.set(result);
+            dataStorage.storeNumber(result);
+            if (displayer.getData().contains(".")) {
+                displayer.getFlags().setDotAllowed(false);
+            } else {
+                displayer.getFlags().setDotAllowed(true);
+            }
+        } catch(NumberFormatException e){
+            handleBadInput();
         }
     }
 

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Calculator.iml" filepath="$PROJECT_DIR$/Calculator.iml" />
+      <module fileurl="file://C:\Users\Przemek\AndroidStudioProjects\pam\Calculator.iml" filepath="C:\Users\Przemek\AndroidStudioProjects\pam\Calculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pam.iml" filepath="$PROJECT_DIR$/.idea/pam.iml" />
     </modules>
   </component>
 </project>

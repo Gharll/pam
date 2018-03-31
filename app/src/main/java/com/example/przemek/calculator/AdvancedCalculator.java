@@ -5,11 +5,10 @@ import java.math.BigDecimal;
 
 public class AdvancedCalculator extends SimpleCalculator {
 
-    public AdvancedCalculator(Displayer displayer){
-        super(displayer);
+    public AdvancedCalculator(Displayer displayer, DataStorage dataStorage){
+        super(displayer, dataStorage);
 
     }
-
 
     private void showResult(double result){
         dataStorage.clear();
@@ -62,28 +61,18 @@ public class AdvancedCalculator extends SimpleCalculator {
     }
 
     public void handlePercentEvent(){
-        int pointer = super.dataStorage.getStoredNumbersPointer();
+        int pointer = dataStorage.getStoredNumbersPointer();
         if(pointer == 0){
-            showResult(0.0);
+            super.handleClear();
         } else if(pointer == 1) {
             BigDecimal first = dataStorage.getStoredNumbers()[0];
             BigDecimal second = new BigDecimal(displayer.getData());
-            // that means: result = first*second/100
-            dataStorage.getStoredNumbers()[1] =  super.divideFormatted(first, second);
-            super.handleEqual();
+
+            // that means: first*second/100
+            dataStorage.setStoredNumber(1, super.divideFormatted(first.multiply(second),
+                    new BigDecimal(100)));
+            super.handleCalculate();
         }
     }
 
-    @Override
-    public void calculate(){
-        super.calculate();
-        if(super.dataStorage.getStoredOperation() != null){
-            switch(super.dataStorage.getStoredOperation()){
-                /*case "+":
-                    dataStorage.setResult(dataStorage.getStoredNumbers()[0]
-                            + dataStorage.getStoredNumbers()[1]);
-                    break;*/
-            }
-        }
-    }
 }

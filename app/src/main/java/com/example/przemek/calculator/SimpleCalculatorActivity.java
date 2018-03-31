@@ -12,8 +12,7 @@ import java.util.Map;
 public class SimpleCalculatorActivity extends CalculatorActivity {
 
 
-    protected Displayer displayer;
-    private SimpleCalculator simpleCalculator;
+    protected SimpleCalculator simpleCalculator;
     private Symbols symbols = new Symbols();
 
     @Override
@@ -23,7 +22,7 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         initializeEvent();
 
         if (outState != null) {
-            displayer.restore(outState);
+            //displayer.restore(outState);
             //dataStorage.restore(outState);
         }
     }
@@ -43,8 +42,7 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
 
     protected void initializeObject() {
         TextView textView = (TextView) findViewById(R.id.tv_displayer);
-        displayer = new Displayer(textView);
-        simpleCalculator = new SimpleCalculator(displayer);
+        simpleCalculator = new SimpleCalculator(new Displayer(textView));
         symbols = new Symbols();
 
     }

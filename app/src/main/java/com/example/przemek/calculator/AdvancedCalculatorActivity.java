@@ -21,8 +21,7 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
     @Override
     protected void initializeObject(){
         super.initializeObject();
-        advancedCalculator = new AdvancedCalculator(super.displayer);
-
+        advancedCalculator = new AdvancedCalculator(simpleCalculator.displayer, simpleCalculator.dataStorage);
     }
 
     @Override
