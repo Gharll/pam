@@ -14,6 +14,16 @@ public class Displayer {
     private Symbols symbols = new Symbols();
     private Flags flags = new Flags();
 
+    public void save(Bundle savedInstanceState) {
+        savedInstanceState.putString("data", getData());
+        savedInstanceState.putParcelable("flags", getFlags());
+    }
+
+    public void restore(Bundle outState) {
+        data = outState.getString("data");
+        flags = outState.getParcelable("flags");
+        refresh();
+    }
 
     public Displayer(TextView tv) {
         this.tv = tv;
@@ -24,27 +34,27 @@ public class Displayer {
         return flags;
     }
 
+    private boolean isNegative(){
+        return data.charAt(0) == '-';
+    }
+
     public void append(String s) {
         int max;
-        if (data.charAt(0) == '-') {
+        if (isNegative()) {
             max = MAX_NUMBER_LENGTH + 1;
         } else {
             max = MAX_NUMBER_LENGTH;
         }
-
-        if (data.length() < max) {
-            if (flags.isInitialValue()) {
-                clear();
-                flags.setInitialValue(false);
-                flags.setDotAllowed(true);
-            }
+        if(data.length() < max){
             String appended = this.data + s;
             set(appended);
         }
+
     }
 
     public void setInitialData() {
-        flags.setInitialValue(true);
+        clear();
+        flags.setDotAllowed(true);
         set(INITIAL_DATA);
     }
 
@@ -73,7 +83,6 @@ public class Displayer {
     public void clear() {
         set("");
         flags.setDotAllowed(false);
-        flags.setEqualAllowed(true);
     }
 
     public void deleteLastCharacter() {
@@ -103,7 +112,7 @@ public class Displayer {
     }
 
     public void negate() {
-        if (!isEmpty() && !getFlags().isInitialValue()) {
+        if (!isEmpty()) {
             char fistCharacter = data.charAt(0);
             if (fistCharacter == '-') {
                 set(data.substring(1, data.length()));
@@ -117,20 +126,16 @@ public class Displayer {
         set(s + data);
     }
 
-    public void save(Bundle savedInstanceState) {
-        savedInstanceState.putString("data", getData());
-        savedInstanceState.putParcelable("flags", getFlags());
-    }
-
-    public void restore(Bundle outState) {
-        data = outState.getString("data");
-        flags = outState.getParcelable("flags");
-        refresh();
-    }
-
     private void refresh() {
         tv.setText(data);
     }
 
+    public boolean isInitalData(){
+        return getData().length() == 1 && getData().charAt(0) == '0';
+    }
+
+    public boolean isPositive(){
+        return getData().charAt(0) == '0';
+    }
 
 }

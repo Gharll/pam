@@ -1,6 +1,7 @@
 package com.example.przemek.calculator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class SimpleCalculator {
 
@@ -31,77 +32,100 @@ public class SimpleCalculator {
     }
 
     public void handleNumber(int number){
-        //handleError();
-        displayer.append(String.valueOf(number));
+        String sNumber = String.valueOf(number);
+        if(displayer.isInitalData()){
+            displayer.set(sNumber);
+        } else {
+            displayer.append(String.valueOf(sNumber));
+        }
+
     }
 
     public void handleZeroNumber(){
-        //handleError();
-        if(!displayer.isEmpty() && !displayer.getFlags().isInitialValue()){
+        if(!displayer.isEmpty()){
             handleNumber(0);
         }
     }
 
     public void handleOperation(char operationSymbol){
-        //handleError();
         if (!displayer.isEmpty() && !displayer.isLastCharacterSymbol()) {
             try {
-                dataStorage.storeNumber(displayer.getData());
+                dataStorage.storeNumber(new BigDecimal(displayer.getData()));
                 dataStorage.pointAtNextNumber();
                 dataStorage.storeOperation(String.valueOf(operationSymbol));
-                displayer.clear();
                 displayer.setInitialData();
             }catch (NumberFormatException e) {
-                handleBadInput();
+                showError();
             }
 
         }
     }
 
     public void handleBackspace(){
-        //handleError();
-        displayer.deleteLastCharacter();
+        if(displayer.getData().equals("-0.")){
+            displayer.negate();
+        }
+        if(displayer.getData().length() == 2 && !displayer.isPositive()){
+            displayer.setInitialData();
+        } else {
+            displayer.deleteLastCharacter();
+        }
+
     }
 
     public void handleDot(){
-        //handleError();
         if (!displayer.isEmpty()
                 && !displayer.isLastCharacterSymbol()
-                && displayer.getFlags().isDotAllowed()
-                && !displayer.getFlags().isInitialValue()) {
+                && displayer.getFlags().isDotAllowed()) {
             displayer.getFlags().setDotAllowed(false);
             displayer.append(".");
         }
     }
 
     public void handleNegate(){
-        //handleError();
-        displayer.negate();
+        if(!displayer.isInitalData() && !displayer.getData().equals("0.")){
+            displayer.negate();
+        }
     }
 
     public void handleEqual(){
-        //handleError();
         if(!displayer.isLastCharacterSymbol()){
-                dataStorage.storeNumber(displayer.getData());
-                handleCalculate();
+                try{
+                    dataStorage.storeNumber(displayer.getData());
+                } catch (NumberFormatException e) {
+                    showError("Bad input");
+                }
+                if(!displayer.getFlags().isError()){
+                    try{
+                        handleCalculate();
+                    } catch (NumberFormatException e){
+                        showError("Overflow");
+                    }
+                }
         }
     }
 
     public void handleCalculate(){
         dataStorage.resetStoredNumberPointer();
-        displayer.getFlags().setEqualAllowed(false);
-        this.calculate();
-        try{
-            String result = dataStorage.getFormattedResult();
-            displayer.set(result);
-            dataStorage.storeNumber(result);
-            if (displayer.getData().contains(".")) {
-                displayer.getFlags().setDotAllowed(false);
-            } else {
-                displayer.getFlags().setDotAllowed(true);
+        try {
+            this.calculate();
+        } catch(ArithmeticException e){
+            displayer.set("Division by zero!");
+            displayer.getFlags().setError(true);
+        }
+        if(!displayer.getFlags().isError()){
+            try{
+                String result = dataStorage.getFormattedResult();
+                displayer.set(result);
+                dataStorage.storeNumber(result);
+                if (displayer.getData().contains(".")) {
+                    displayer.getFlags().setDotAllowed(false);
+                } else {
+                    displayer.getFlags().setDotAllowed(true);
+                }
+            } catch(NumberFormatException e) {
+                showError();
             }
-        } catch(NumberFormatException e){
-            handleBadInput();
         }
     }
 
@@ -120,20 +144,47 @@ public class SimpleCalculator {
                     dataStorage.setResult(firstNumber.multiply(secondNumber));
                     break;
                 case "/":
-                    dataStorage.setResult(divideFormatted(firstNumber, secondNumber));
+                    if(firstNumber.equals(BigDecimal.ZERO)){
+                        dataStorage.storeNumber(BigDecimal.ZERO);
+                    } else {
+                        dataStorage.setResult(firstNumber.divide(secondNumber,
+                                dataStorage.DIV_PRECISION,
+                                RoundingMode.HALF_UP));
+                    }
+
                     break;
             }
         }
     }
 
-    public BigDecimal divideFormatted(BigDecimal firstNumber, BigDecimal secondNumber){
-        return firstNumber.divide(secondNumber, dataStorage.getPrecision(), BigDecimal.ROUND_FLOOR);
-    }
 
-    private void handleBadInput(){
-        displayer.set("Bad input");
+    protected void showError(String message){
+        displayer.set(message);
         displayer.getFlags().setError(true);
         dataStorage.clear();
+    }
+
+    protected void showError(){
+        showError("Error");
+    }
+
+    protected void showResult(double result){
+        try{
+            dataStorage.storeNumber(result);
+            dataStorage.pointAtNextNumber();
+            dataStorage.setResult(result);
+            displayer.set(dataStorage.getFormattedResult());
+            dataStorage.clear();
+        } catch (NumberFormatException e){
+            if(result == Double.NEGATIVE_INFINITY){
+                showError("Bad input");
+            } else if(result == Double.POSITIVE_INFINITY){
+                showError("Overflow");
+            } else {
+                showError();
+            }
+
+        }
     }
 
 }

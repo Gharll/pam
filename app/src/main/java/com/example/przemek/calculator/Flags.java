@@ -6,29 +6,21 @@ import android.os.Parcelable;
 public class Flags implements Parcelable {
 
     private boolean isDotAllowed;
-    private boolean isEqualAllowed;
-    private boolean isInitialValue;
     private boolean isError;
 
     public Flags(){
-        isDotAllowed = false;
-        isEqualAllowed = false;
-        isInitialValue = true;
+        isDotAllowed = true;
         isError = false;
     }
 
     protected Flags(Parcel in) {
         isDotAllowed = in.readByte() != 0;
-        isEqualAllowed = in.readByte() != 0;
-        isInitialValue = in.readByte() != 0;
         isError = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (isDotAllowed ? 1 : 0));
-        dest.writeByte((byte) (isEqualAllowed ? 1 : 0));
-        dest.writeByte((byte) (isInitialValue ? 1 : 0));
         dest.writeByte((byte) (isError ? 1 : 0));
     }
 
@@ -55,22 +47,6 @@ public class Flags implements Parcelable {
 
     public void setDotAllowed(boolean dotAllowed) {
         isDotAllowed = dotAllowed;
-    }
-
-    public boolean isEqualAllowed() {
-        return isEqualAllowed;
-    }
-
-    public void setEqualAllowed(boolean equalAllowed) {
-        isEqualAllowed = equalAllowed;
-    }
-
-    public boolean isInitialValue() {
-        return isInitialValue;
-    }
-
-    public void setInitialValue(boolean initialValue) {
-        isInitialValue = initialValue;
     }
 
     public boolean isError() {

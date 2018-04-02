@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.Iterator;
 import java.util.Map;
 
-public class SimpleCalculatorActivity extends CalculatorActivity {
+public class SimpleCalculatorActivity extends CalculatorActivity{
 
 
     protected SimpleCalculator simpleCalculator;
@@ -73,7 +73,12 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    simpleCalculator.handleNumber(number);
+                    if(simpleCalculator.displayer.getFlags().isError()){
+                        simpleCalculator.handleError();
+                    } else {
+                        simpleCalculator.handleNumber(number);
+                    }
+
                 }
             });
         }
@@ -84,7 +89,13 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpleCalculator.handleZeroNumber();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleZeroNumber();
+                }
+
+
             }
         });
     }
@@ -95,7 +106,11 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpleCalculator.handleBackspace();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleBackspace();
+                }
             }
         });
     }
@@ -105,7 +120,11 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpleCalculator.handleClear();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleClear();
+                }
             }
         });
     }
@@ -121,7 +140,12 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   simpleCalculator.handleOperation(operationSymbol);
+                    if(simpleCalculator.displayer.getFlags().isError()){
+                        simpleCalculator.handleError();
+                    } else {
+                        simpleCalculator.handleOperation(operationSymbol);
+                    }
+
                 }
             });
         }
@@ -132,7 +156,11 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            simpleCalculator.handleDot();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleDot();
+                }
             }
         });
     }
@@ -142,19 +170,26 @@ public class SimpleCalculatorActivity extends CalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpleCalculator.handleNegate();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleNegate();
+                }
             }
         });
     }
 
-    private void createEqualEvent() {
+    protected void createEqualEvent() {
         Button button = (Button) findViewById(R.id.btn_operation_equal);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                simpleCalculator.handleEqual();
+                if(simpleCalculator.displayer.getFlags().isError()){
+                    simpleCalculator.handleError();
+                } else {
+                    simpleCalculator.handleEqual();
+                }
             }
         });
     }
-
 }

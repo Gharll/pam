@@ -14,7 +14,18 @@ public class DataStorage {
     private int storedNumbersPointer = 0;
     private String storedOperation;
     private BigDecimal result;
-    protected final int PRECISON = 10;
+    public final int FORMAT_PRECISON = 16;
+    public  final int DIV_PRECISION = 9997;
+
+    public void save(Bundle savedInstanceState){
+        //savedInstanceState.putDoubleArray("storedNumber", storedNumbers);
+        savedInstanceState.putString("storedOperation", storedOperation);
+    }
+
+    public void restore(Bundle outState){
+        //storedNumbers = outState.getDoubleArray("storedNumber");
+        storedOperation = outState.getString("storedOperation");
+    }
 
     public DataStorage(){
         clear();
@@ -22,25 +33,35 @@ public class DataStorage {
 
 
     public void clear(){
-        resetStoredNumbers();
+        clearStoredNumbers();
+        clearOperation();
         resetStoredNumberPointer();
     }
 
-    public void resetStoredNumbers(){
+    public void clearStoredNumbers(){
         storedNumbers[0] = BigDecimal.ZERO;
         storedNumbers[1] = BigDecimal.ZERO;
+        result = BigDecimal.ZERO;
+    }
+
+    public void clearOperation(){
+        storedOperation = "";
     }
 
     public void resetStoredNumberPointer(){
         storedNumbersPointer = 0;
     }
 
-    public void storeNumber(String value) {
+    public void storeNumber(BigDecimal value){
+        storedNumbers[storedNumbersPointer] = value;
+    }
+
+    public void storeNumber(Double value){
         storedNumbers[storedNumbersPointer] = new BigDecimal(value);
     }
 
-    public void storeNumber(double value){
-        storedNumbers[storedNumbersPointer] = BigDecimal.valueOf(value);
+    public void storeNumber(String value){
+        storedNumbers[storedNumbersPointer] = new BigDecimal(value);
     }
 
     public void pointAtNextNumber(){
@@ -53,27 +74,19 @@ public class DataStorage {
         this.storedOperation = operation;
     }
 
-
-    /*public BigDecimal getResult(){
-        return result;
-    }*/
-
     public String getFormattedResult(){
-        return result.round(new MathContext(PRECISON, RoundingMode.UP)).toEngineeringString();
+        if(result == BigDecimal.ZERO){
+            return "0";
+        } else {
+            return result.round(new MathContext(FORMAT_PRECISON, RoundingMode.HALF_UP))
+                    .stripTrailingZeros()
+                    .toEngineeringString();
+        }
+
     }
 
-    public void save(Bundle savedInstanceState){
-        //savedInstanceState.putDoubleArray("storedNumber", storedNumbers);
-        savedInstanceState.putString("storedOperation", storedOperation);
-    }
-
-    public void restore(Bundle outState){
-       //storedNumbers = outState.getDoubleArray("storedNumber");
-       storedOperation = outState.getString("storedOperation");
-    }
-
-    public int getMAX_STORED_NUMBER_SIZE() {
-        return MAX_STORED_NUMBER_SIZE;
+    public BigDecimal getResult(){
+        return result;
     }
 
     public BigDecimal[] getStoredNumbers() {
@@ -89,24 +102,17 @@ public class DataStorage {
         return storedNumbersPointer;
     }
 
-    public void setStoredNumbersPointer(int storedNumbersPointer) {
-        this.storedNumbersPointer = storedNumbersPointer;
-    }
-
     public String getStoredOperation() {
         return storedOperation;
     }
 
-    public void setStoredOperation(String storedOperation) {
-        this.storedOperation = storedOperation;
-    }
 
     public void setResult(BigDecimal result) {
         this.result = result;
     }
 
-    public int getPrecision(){
-        return PRECISON;
+    public void setResult(Double result){
+        this.result = new BigDecimal(result);
     }
 
     public void setStoredNumber(int index, BigDecimal value){

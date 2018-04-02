@@ -7,57 +7,105 @@ public class AdvancedCalculator extends SimpleCalculator {
 
     public AdvancedCalculator(Displayer displayer, DataStorage dataStorage){
         super(displayer, dataStorage);
-
     }
 
-    private void showResult(double result){
-        dataStorage.clear();
-        dataStorage.storeNumber(result);
-        dataStorage.pointAtNextNumber();
-        displayer.set(String.valueOf(result));
+    public AdvancedCalculator(Displayer displayer){
+        super(displayer);
     }
 
     public void handleSinEvent(){
-        double result = Math.sin(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.sin(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
     }
 
 
 
     public void handleCosEvent(){
-        double result = Math.cos(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.cos(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
+
+
     }
 
     public void handleTanEvent(){
-        double result = Math.tan(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.tan(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
     }
 
     public void handleLogEvent(){
-        double result = Math.log(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.log(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
+
+
     }
 
     public void handleLnEvent(){
-        double result = Math.log10(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.log10(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
+
+
     }
 
     public void handleSqrtEvent(){
-        double result = Math.sqrt(displayer.getParsedData());
-        showResult(result);
+        try{
+            double result = Math.sqrt(displayer.getParsedData());
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
+
+
     }
 
+
     public void handlePowerSquareEvent(){
-        double result = Math.pow(displayer.getParsedData(), 2);
-        showResult(result);
+        try{
+            dataStorage.setStoredNumber(1, new BigDecimal(displayer.getParsedData()));
+            double result = Math.pow(displayer.getParsedData(), 2);
+            showResult(result);
+        } catch (NumberFormatException e){
+            showError("Bad input");
+        }
+
+
     }
 
     public void handlePowerEvent(){
-        if(super.dataStorage.getStoredNumbersPointer() == 0){
+        dataStorage.storeNumber(displayer.getData());
+        dataStorage.pointAtNextNumber();
+        dataStorage.storeOperation("^");
+        displayer.clear();
+        displayer.setInitialData();
+    }
 
+    public void calculatePower(){
+        if (dataStorage.getStoredNumbers()[1] == null){
+            dataStorage.getStoredNumbers()[1] = new BigDecimal(0.0);
         }
+        BigDecimal base = dataStorage.getStoredNumbers()[0];
+        BigDecimal power = dataStorage.getStoredNumbers()[1];
+        double result = Math.pow(base.doubleValue(), power.doubleValue());
+        dataStorage.setResult(result);
     }
 
     public void handlePercentEvent(){
@@ -69,9 +117,19 @@ public class AdvancedCalculator extends SimpleCalculator {
             BigDecimal second = new BigDecimal(displayer.getData());
 
             // that means: first*second/100
-            dataStorage.setStoredNumber(1, super.divideFormatted(first.multiply(second),
-                    new BigDecimal(100)));
+            dataStorage.setStoredNumber(1, first.multiply(second).divide(new BigDecimal(100)));
             super.handleCalculate();
+        }
+    }
+
+    public void calculate(){
+        super.calculate();
+        if(dataStorage.getStoredOperation() != null){
+            switch(dataStorage.getStoredOperation()){
+                case "^":
+                    this.calculatePower();
+                    break;
+            }
         }
     }
 

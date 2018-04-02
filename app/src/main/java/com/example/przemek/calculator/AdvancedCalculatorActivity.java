@@ -43,12 +43,17 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         createPercentEvent();
     }
 
+
     void createSinEvent(){
         Button button = (Button) findViewById(R.id.btn_operation_sin);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleSinEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleSinEvent();
+                }
             }
         });
 
@@ -59,7 +64,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleCosEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleCosEvent();
+                }
             }
         });
     }
@@ -69,7 +78,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleTanEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleTanEvent();
+                }
             }
         });
     }
@@ -79,7 +92,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleLogEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleLogEvent();
+                }
             }
         });
     }
@@ -89,7 +106,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleLnEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleLnEvent();
+                }
             }
         });
     }
@@ -99,7 +120,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handleSqrtEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleSqrtEvent();
+                }
             }
         });
     }
@@ -109,7 +134,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handlePowerSquareEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handlePowerSquareEvent();
+                }
             }
         });
     }
@@ -119,7 +148,11 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handlePowerEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handlePowerEvent();
+                }
             }
         });
     }
@@ -129,7 +162,26 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                advancedCalculator.handlePercentEvent();
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handlePercentEvent();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void createEqualEvent(){
+        Button button = (Button) findViewById(R.id.btn_operation_equal);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(advancedCalculator.displayer.getFlags().isError()){
+                    advancedCalculator.handleError();
+                } else {
+                    advancedCalculator.handleEqual();
+                }
             }
         });
     }
