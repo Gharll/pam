@@ -22,8 +22,8 @@ public class SimpleCalculatorActivity extends CalculatorActivity{
         initializeEvent();
 
         if (outState != null) {
-            //displayer.restore(outState);
-            //dataStorage.restore(outState);
+            simpleCalculator.displayer.restore(outState);
+            simpleCalculator.dataStorage.restore(outState);
         }
     }
 
@@ -33,12 +33,12 @@ public class SimpleCalculatorActivity extends CalculatorActivity{
         return R.layout.activity_simple_calculator;
     }
 
-   /* @Override
+    @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        displayer.save(savedInstanceState);
-        calculator.save(savedInstanceState);
-    }*/
+        simpleCalculator.displayer.save(savedInstanceState);
+        simpleCalculator.dataStorage.save(savedInstanceState);
+    }
 
     protected void initializeObject() {
         TextView textView = (TextView) findViewById(R.id.tv_displayer);
@@ -111,6 +111,13 @@ public class SimpleCalculatorActivity extends CalculatorActivity{
                 } else {
                     simpleCalculator.handleBackspace();
                 }
+            }
+        });
+        button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                simpleCalculator.displayer.setInitialData();
+                return true;
             }
         });
     }

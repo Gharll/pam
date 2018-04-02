@@ -1,6 +1,7 @@
 package com.example.przemek.calculator;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -17,14 +18,19 @@ public class DataStorage {
     public final int FORMAT_PRECISON = 16;
     public  final int DIV_PRECISION = 9997;
 
+
     public void save(Bundle savedInstanceState){
-        //savedInstanceState.putDoubleArray("storedNumber", storedNumbers);
+        savedInstanceState.putSerializable("storedNumber", storedNumbers);
+        savedInstanceState.putSerializable("result", result);
         savedInstanceState.putString("storedOperation", storedOperation);
+        savedInstanceState.putInt("storedNumbersPointer", storedNumbersPointer);
     }
 
     public void restore(Bundle outState){
-        //storedNumbers = outState.getDoubleArray("storedNumber");
+        storedNumbers = (BigDecimal[]) outState.getSerializable("storedNumber");
+        result = (BigDecimal) outState.getSerializable("result");
         storedOperation = outState.getString("storedOperation");
+        storedNumbersPointer = outState.getInt("storedNumbersPointer");
     }
 
     public DataStorage(){

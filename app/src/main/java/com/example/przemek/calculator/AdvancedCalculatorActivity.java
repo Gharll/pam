@@ -12,10 +12,15 @@ public class AdvancedCalculatorActivity extends SimpleCalculatorActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle outState) {
+        super.onCreate(outState);
         initializeObject();
         initializeEvent();
+
+        if (outState != null) {
+            simpleCalculator.displayer.restore(outState);
+            simpleCalculator.dataStorage.restore(outState);
+        }
     }
 
     @Override
