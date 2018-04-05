@@ -7,6 +7,7 @@ public class SimpleCalculator {
 
     protected DataStorage dataStorage = new DataStorage();
     protected Displayer displayer;
+    protected boolean isCalculated;
 
 
     public SimpleCalculator(Displayer displayer){
@@ -33,8 +34,10 @@ public class SimpleCalculator {
 
     public void handleNumber(int number){
         String sNumber = String.valueOf(number);
-        if(displayer.isInitalData()){
+        if(displayer.isInitalData() || displayer.getFlags().isToOverride()){
             displayer.set(sNumber);
+            displayer.getFlags().setToOverride(false);
+            displayer.getFlags().setDotAllowed(true);
         } else {
             displayer.append(String.valueOf(sNumber));
         }
@@ -53,7 +56,7 @@ public class SimpleCalculator {
                 dataStorage.storeNumber(new BigDecimal(displayer.getData()));
                 dataStorage.pointAtNextNumber();
                 dataStorage.storeOperation(String.valueOf(operationSymbol));
-                displayer.setInitialData();
+                displayer.getFlags().setToOverride(true);
             }catch (NumberFormatException e) {
                 showError();
             }
@@ -69,6 +72,7 @@ public class SimpleCalculator {
             displayer.setInitialData();
         } else {
             displayer.deleteLastCharacter();
+            displayer.getFlags().setToOverride(false);
         }
 
     }
@@ -78,6 +82,7 @@ public class SimpleCalculator {
                 && !displayer.isLastCharacterSymbol()
                 && displayer.getFlags().isDotAllowed()) {
             displayer.getFlags().setDotAllowed(false);
+            displayer.getFlags().setToOverride(false);
             displayer.append(".");
         }
     }
@@ -92,12 +97,14 @@ public class SimpleCalculator {
         if(!displayer.isLastCharacterSymbol()){
                 try{
                     dataStorage.storeNumber(displayer.getData());
+                   // dataStorage.setStoredNumber(1, dataStorage.getResult());
                 } catch (NumberFormatException e) {
                     showError("Bad input");
                 }
                 if(!displayer.getFlags().isError()){
                     try{
                         handleCalculate();
+                        displayer.getFlags().setToOverride(true);
                     } catch (NumberFormatException e){
                         showError("Overflow");
                     }
@@ -108,7 +115,7 @@ public class SimpleCalculator {
     public void handleCalculate(){
         dataStorage.resetStoredNumberPointer();
         try {
-            this.calculate();
+            isCalculated = calculate();
         } catch(ArithmeticException e){
             displayer.set("Division by zero!");
             displayer.getFlags().setError(true);
@@ -116,12 +123,14 @@ public class SimpleCalculator {
         if(!displayer.getFlags().isError()){
             try{
                 String result = dataStorage.getFormattedResult();
-                displayer.set(result);
-                dataStorage.storeNumber(result);
-                if (displayer.getData().contains(".")) {
-                    displayer.getFlags().setDotAllowed(false);
-                } else {
-                    displayer.getFlags().setDotAllowed(true);
+                if(isCalculated){
+                    displayer.set(result);
+                    dataStorage.storeNumber(result);
+                    if (displayer.getData().contains(".")) {
+                        displayer.getFlags().setDotAllowed(false);
+                    } else {
+                        displayer.getFlags().setDotAllowed(true);
+                    }
                 }
             } catch(NumberFormatException e) {
                 showError();
@@ -129,7 +138,7 @@ public class SimpleCalculator {
         }
     }
 
-    public void calculate(){
+    public boolean calculate(){
         if(dataStorage.getStoredOperation() != null){
             BigDecimal firstNumber = dataStorage.getStoredNumbers()[0];
             BigDecimal secondNumber = dataStorage.getStoredNumbers()[1];
@@ -151,10 +160,13 @@ public class SimpleCalculator {
                                 dataStorage.DIV_PRECISION,
                                 RoundingMode.HALF_UP));
                     }
-
                     break;
+
+                default:
+                    return false;
             }
         }
+        return true;
     }
 
 
@@ -174,6 +186,7 @@ public class SimpleCalculator {
             dataStorage.pointAtNextNumber();
             dataStorage.setResult(result);
             displayer.set(dataStorage.getFormattedResult());
+            displayer.getFlags().setToOverride(true);
             dataStorage.clear();
         } catch (NumberFormatException e){
             if(result == Double.NEGATIVE_INFINITY){
@@ -181,7 +194,7 @@ public class SimpleCalculator {
             } else if(result == Double.POSITIVE_INFINITY){
                 showError("Overflow");
             } else {
-                showError();
+                throw e;
             }
 
         }

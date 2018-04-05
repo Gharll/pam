@@ -135,7 +135,7 @@ public class Displayer {
     }
 
     public boolean isPositive(){
-        return getData().charAt(0) == '0';
+        return !(getData().charAt(0) == '-');
     }
 
 }

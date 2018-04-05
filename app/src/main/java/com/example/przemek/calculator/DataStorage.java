@@ -9,12 +9,12 @@ import java.math.RoundingMode;
 
 public class DataStorage {
 
-    private final int MAX_STORED_NUMBER_SIZE = 2;
+    public final int MAX_STORED_NUMBER_SIZE = 2;
     private BigDecimal storedNumbers[] = new BigDecimal[MAX_STORED_NUMBER_SIZE];
     /*StoredNumbersPointer is defined to specify where store next number */
     private int storedNumbersPointer = 0;
     private String storedOperation;
-    private BigDecimal result;
+    private BigDecimal result = BigDecimal.ZERO;
     public final int FORMAT_PRECISON = 16;
     public  final int DIV_PRECISION = 9997;
 
@@ -45,8 +45,8 @@ public class DataStorage {
     }
 
     public void clearStoredNumbers(){
-        storedNumbers[0] = BigDecimal.ZERO;
-        storedNumbers[1] = BigDecimal.ZERO;
+        storedNumbers[0] = null;
+        storedNumbers[1] = null;
         result = BigDecimal.ZERO;
     }
 

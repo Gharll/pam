@@ -7,10 +7,12 @@ public class Flags implements Parcelable {
 
     private boolean isDotAllowed;
     private boolean isError;
+    private boolean isToOverride;
 
     public Flags(){
         isDotAllowed = true;
         isError = false;
+        isToOverride = false;
     }
 
     protected Flags(Parcel in) {
@@ -22,6 +24,7 @@ public class Flags implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByte((byte) (isDotAllowed ? 1 : 0));
         dest.writeByte((byte) (isError ? 1 : 0));
+        dest.writeByte((byte) (isToOverride ? 1:0 ));
     }
 
     @Override
@@ -55,5 +58,13 @@ public class Flags implements Parcelable {
 
     public void setError(boolean error) {
         isError = error;
+    }
+
+    public boolean isToOverride() {
+        return isToOverride;
+    }
+
+    public void setToOverride(boolean toOverride) {
+        isToOverride = toOverride;
     }
 }

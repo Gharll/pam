@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         configureActivity(R.id.btn_simple, SimpleCalculatorActivity.class);
         configureActivity(R.id.btn_advanced, AdvancedCalculatorActivity.class);
         configureActivity(R.id.btn_about, AboutActivity.class);
+        handleExit();
     }
 
     private void configureActivity(int resource, final Class activityClass){
@@ -29,4 +30,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void handleExit(){
+        Button exitButton = (Button) findViewById(R.id.btn_exit);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                System.exit(0);
+            }
+        });
+    }
+
 }

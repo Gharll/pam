@@ -94,8 +94,9 @@ public class AdvancedCalculator extends SimpleCalculator {
         dataStorage.storeNumber(displayer.getData());
         dataStorage.pointAtNextNumber();
         dataStorage.storeOperation("^");
-        displayer.clear();
-        displayer.setInitialData();
+        /*displayer.clear();
+        displayer.setInitialData();*/
+        displayer.getFlags().setToOverride(true);
     }
 
     public void calculatePower(){
@@ -122,15 +123,19 @@ public class AdvancedCalculator extends SimpleCalculator {
         }
     }
 
-    public void calculate(){
-        super.calculate();
-        if(dataStorage.getStoredOperation() != null){
+    @Override
+    public boolean calculate(){
+        super.isCalculated = super.calculate();
+        if(dataStorage.getStoredOperation() != null && !isCalculated){
             switch(dataStorage.getStoredOperation()){
                 case "^":
                     this.calculatePower();
                     break;
+                default:
+                    return false;
             }
         }
+        return true;
     }
 
 }
