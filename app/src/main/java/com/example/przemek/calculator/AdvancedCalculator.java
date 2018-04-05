@@ -77,7 +77,6 @@ public class AdvancedCalculator extends SimpleCalculator {
 
     }
 
-
     public void handlePowerSquareEvent(){
         try{
             dataStorage.setStoredNumber(1, new BigDecimal(displayer.getParsedData()));
@@ -91,22 +90,37 @@ public class AdvancedCalculator extends SimpleCalculator {
     }
 
     public void handlePowerEvent(){
-        dataStorage.storeNumber(displayer.getData());
-        dataStorage.pointAtNextNumber();
-        dataStorage.storeOperation("^");
+        try{
+            dataStorage.storeNumber(displayer.getData());
+            dataStorage.pointAtNextNumber();
+            dataStorage.storeOperation("^");
         /*displayer.clear();
         displayer.setInitialData();*/
-        displayer.getFlags().setToOverride(true);
+            displayer.getFlags().setToOverride(true);
+        } catch(NumberFormatException e){
+            showError();
+        }
+
     }
 
     public void calculatePower(){
-        if (dataStorage.getStoredNumbers()[1] == null){
-            dataStorage.getStoredNumbers()[1] = new BigDecimal(0.0);
+        try{
+            if (dataStorage.getStoredNumbers()[1] == null){
+                dataStorage.getStoredNumbers()[1] = new BigDecimal(0.0);
+            }
+            BigDecimal base = dataStorage.getStoredNumbers()[0];
+            BigDecimal power = dataStorage.getStoredNumbers()[1];
+            double result = Math.pow(base.doubleValue(), power.doubleValue());
+            dataStorage.setResult(result);
+
+            if(base != BigDecimal.ZERO && result == 0.0){
+                showError("Overflow");
+            }
+
+        } catch (NumberFormatException e){
+            showError();
         }
-        BigDecimal base = dataStorage.getStoredNumbers()[0];
-        BigDecimal power = dataStorage.getStoredNumbers()[1];
-        double result = Math.pow(base.doubleValue(), power.doubleValue());
-        dataStorage.setResult(result);
+
     }
 
     public void handlePercentEvent(){
