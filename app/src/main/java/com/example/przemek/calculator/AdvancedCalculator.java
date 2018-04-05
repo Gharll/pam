@@ -98,7 +98,7 @@ public class AdvancedCalculator extends SimpleCalculator {
         displayer.setInitialData();*/
             displayer.getFlags().setToOverride(true);
         } catch(NumberFormatException e){
-            showError();
+            showError("Overflow");
         }
 
     }
@@ -113,12 +113,9 @@ public class AdvancedCalculator extends SimpleCalculator {
             double result = Math.pow(base.doubleValue(), power.doubleValue());
             dataStorage.setResult(result);
 
-            if(base != BigDecimal.ZERO && result == 0.0){
-                showError("Overflow");
-            }
 
         } catch (NumberFormatException e){
-            showError();
+            showError("Overflow");
         }
 
     }
